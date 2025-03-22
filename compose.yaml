@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # ========================
+  # 1) MONGODB SERVICE
+  # ========================
+  mongodb:
+    image: 'mongo:latest'
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=mydatabase
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+
+
+  # ========================
+  # 3) SPRING BOOT BACKEND
+  # ========================
+  springboot:
+    build:
+      dockerfile: Dockerfile
+    container_name: springboot
+    ports:
+      - '3080:8080'
+    depends_on:
+      - mongodb
+
+  # ========================
+  # 4) REACT FRONTEND
+  # ========================
+  react:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: react
+    # Map port 80 in the container to 3000 on the host
+    ports:
+      - '3000:80'
+    depends_on:
+      - springboot
+
+volumes:
+  mongo-data:
+  postgres-data:
