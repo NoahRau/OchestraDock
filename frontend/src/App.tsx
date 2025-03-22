@@ -10,6 +10,8 @@ interface Task {
   updatedAt: string;
 }
 
+const API_BASE_URL = "http://localhost:3080";
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskDesc, setNewTaskDesc] = useState("");
@@ -21,7 +23,7 @@ function App() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:8080/api/tasks");
+      const response = await fetch(`${API_BASE_URL}/tasks`);
       if (!response.ok) {
         throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
@@ -43,7 +45,7 @@ function App() {
     e.preventDefault();
     if (!newTaskDesc.trim()) return;
     try {
-      const response = await fetch("http://localhost:3080/api/tasks", {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,35 +63,35 @@ function App() {
   };
 
   return (
-      <div className="App" style={{ padding: "20px" }}>
-        <h1>Task Manager</h1>
-        {error && <p style={{ color: "red" }}>Error: {error}</p>}
-        <form onSubmit={handleCreateTask} style={{ marginBottom: "20px" }}>
-          <input
-              type="text"
-              placeholder="New task description"
-              value={newTaskDesc}
-              onChange={(e) => setNewTaskDesc(e.target.value)}
-              style={{ marginRight: "10px", padding: "5px" }}
-          />
-          <button type="submit" style={{ padding: "5px 10px" }}>
-            Add Task
-          </button>
-        </form>
-        {loading ? (
-            <p>Loading tasks...</p>
-        ) : tasks.length === 0 ? (
-            <p>No tasks found. Add your first task!</p>
-        ) : (
-            <ul>
-              {tasks.map((task) => (
-                  <li key={task.id}>
-                    {task.description} - {task.completed ? "Completed" : "Not Completed"}
-                  </li>
-              ))}
-            </ul>
-        )}
-      </div>
+    <div className="App" style={{ padding: "20px" }}>
+      <h1>Task Manager</h1>
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      <form onSubmit={handleCreateTask} style={{ marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="New task description"
+          value={newTaskDesc}
+          onChange={(e) => setNewTaskDesc(e.target.value)}
+          style={{ marginRight: "10px", padding: "5px" }}
+        />
+        <button type="submit" style={{ padding: "5px 10px" }}>
+          Add Task
+        </button>
+      </form>
+      {loading ? (
+        <p>Loading tasks...</p>
+      ) : tasks.length === 0 ? (
+        <p>No tasks found. Add your first task!</p>
+      ) : (
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.id}>
+              {task.description} - {task.completed ? "Completed" : "Not Completed"}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 

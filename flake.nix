@@ -16,6 +16,8 @@
         pkgs.jdk21
         pkgs.kotlin
         pkgs.maven
+        pkgs.nodejs_23
+        pkgs.jq
       ];
     };
   };

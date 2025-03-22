@@ -1,13 +1,13 @@
 services:
   mongodb:
-    image: 'mongo:latest'
+    image: mongo:latest
     container_name: mongodb
     environment:
-      - MONGO_INITDB_DATABASE=mydatabase
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=${db}
+      - MONGO_INITDB_ROOT_USERNAME=${db_user}
+      - MONGO_INITDB_ROOT_PASSWORD=${db_pw}
     ports:
-      - '27017:27017'
+      - 27017:27017
     volumes:
       - mongo-data:/data/db
 
@@ -16,7 +16,13 @@ services:
       context: ./backend
     container_name: backend
     ports:
-      - '3080:8080'
+      - 3080:8080
+    environment:
+      - DB_HOST=mongodb
+      - DB_PORT=27017
+      - DB_NAME=${db}
+      - DB_USERNAME=${db_user}
+      - DB_PASSWORD=${db_pw}
     depends_on:
       - mongodb
 
@@ -25,10 +31,10 @@ services:
       context: ./frontend
     container_name: frontend
     ports:
-      - '3000:80'
+      - 3000:80
     depends_on:
       - backend
-
+      
 volumes:
   mongo-data:
   postgres-data:
