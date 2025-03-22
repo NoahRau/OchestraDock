@@ -1,5 +1,5 @@
 {
-  description = "Nix flake devShell for the cloud-native Todo App with Python dependencies";
+  description = "devShell";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
@@ -13,12 +13,10 @@
   in {
     devShells.${system}.default = pkgs.mkShell {
       buildInputs = [
-        pkgs.java21
+        pkgs.jdk21
+        pkgs.kotlin
         pkgs.maven
       ];
-      shellHook = ''
-        alias build="mvn clean install"
-      '';
     };
   };
 }
