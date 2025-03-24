@@ -1,6 +1,5 @@
 package com.cloudapp.todoappcloudsync
 
-
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 

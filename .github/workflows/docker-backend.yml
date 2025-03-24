@@ -34,3 +34,5 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/todoapp-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max,sharing=private

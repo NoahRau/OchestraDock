@@ -7,7 +7,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${db_user}
       - MONGO_INITDB_ROOT_PASSWORD=${db_pw}
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - mongo-data:/data/db
 
@@ -16,13 +16,15 @@ services:
       context: ./backend
     container_name: backend
     ports:
-      - 3080:8080
+      - "3080:8080"
     environment:
       - DB_HOST=mongodb
       - DB_PORT=27017
       - DB_NAME=${db}
       - DB_USERNAME=${db_user}
       - DB_PASSWORD=${db_pw}
+      - JWT_SECRET=your-very-long-secure-secret-string-32+chars
+      - REGISTRATION_ENABLED=true
     depends_on:
       - mongodb
 
@@ -31,7 +33,7 @@ services:
       context: ./frontend
     container_name: frontend
     ports:
-      - 3000:80
+      - "3000:80"
     depends_on:
       - backend
       
