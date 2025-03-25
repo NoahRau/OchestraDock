@@ -10,7 +10,6 @@ data class TaskRequest(
     @field:Size(max = 255)
     @Schema(description = "A short description of the task", example = "Buy groceries")
     val description: String,
-
     @Schema(description = "Flag indicating if the task is completed", example = "false")
-    val completed: Boolean = false
+    val completed: Boolean = false,
 )

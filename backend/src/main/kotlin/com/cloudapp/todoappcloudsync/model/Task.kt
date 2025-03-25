@@ -10,15 +10,11 @@ import java.time.LocalDateTime
 data class Task(
     @Id
     val id: String? = null,
-
     val description: String,
     val completed: Boolean = false,
-
     val userId: String? = null,
-
     @CreatedDate
     val createdAt: LocalDateTime = LocalDateTime.now(),
-
     @LastModifiedDate
-    val updatedAt: LocalDateTime = LocalDateTime.now()
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
 )

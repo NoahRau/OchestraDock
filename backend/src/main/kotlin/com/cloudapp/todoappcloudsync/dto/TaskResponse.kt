@@ -7,16 +7,12 @@ import java.time.LocalDateTime
 data class TaskResponse(
     @Schema(description = "Unique identifier of the task", example = "1234567890abc")
     val id: String,
-
     @Schema(description = "A short description of the task", example = "Buy groceries")
     val description: String,
-
     @Schema(description = "Flag indicating if the task is completed", example = "false")
     val completed: Boolean,
-
     @Schema(description = "Date and time the task was created")
     val createdAt: LocalDateTime,
-
     @Schema(description = "Date and time the task was last updated")
-    val updatedAt: LocalDateTime
+    val updatedAt: LocalDateTime,
 )

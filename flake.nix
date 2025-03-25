@@ -18,6 +18,7 @@
         pkgs.maven
         pkgs.nodejs_23
         pkgs.jq
+        pkgs.ktlint
       ];
     };
   };

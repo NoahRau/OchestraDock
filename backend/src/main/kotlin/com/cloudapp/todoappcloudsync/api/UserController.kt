@@ -7,12 +7,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Users", description = "User management endpoints")
 @RestController
 @RequestMapping("/api/v1/users")
-class UserController(private val userService: UserService) {
+class UserController(
+    private val userService: UserService,
+) {
     companion object {
         private val logger = LoggerFactory.getLogger(UserController::class.java)
     }
@@ -21,11 +26,13 @@ class UserController(private val userService: UserService) {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "User found"),
-            ApiResponse(responseCode = "404", description = "User not found")
-        ]
+            ApiResponse(responseCode = "404", description = "User not found"),
+        ],
     )
     @GetMapping("/{id}")
-    fun getUser(@PathVariable id: String): User {
+    fun getUser(
+        @PathVariable id: String,
+    ): User {
         logger.info("Fetching user with id: $id")
         return userService.getUserById(id)
     }

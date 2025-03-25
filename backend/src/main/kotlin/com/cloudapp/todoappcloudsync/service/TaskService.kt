@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
 
 @Service
-class TaskService(private val taskRepository: TaskRepository) {
+class TaskService(
+    private val taskRepository: TaskRepository,
+) {
     companion object {
         private val logger = LoggerFactory.getLogger(TaskService::class.java)
     }
@@ -24,33 +26,43 @@ class TaskService(private val taskRepository: TaskRepository) {
 
     fun getTaskById(id: String): TaskResponse {
         logger.info("Fetching task with id: $id")
-        return taskRepository.findById(id)
+        return taskRepository
+            .findById(id)
             .orElseThrow {
                 notFound(id)
-            }
-            .toResponse()
+            }.toResponse()
     }
 
-    fun createTask(request: TaskRequest, userId: String): TaskResponse {
+    fun createTask(
+        request: TaskRequest,
+        userId: String,
+    ): TaskResponse {
         logger.info("Creating task for user: $userId with description: ${request.description}")
-        val savedTask = taskRepository.save(
-            Task(description = request.description, completed = request.completed, userId = userId)
-        )
+        val savedTask =
+            taskRepository.save(
+                Task(description = request.description, completed = request.completed, userId = userId),
+            )
         logger.info("Task created with id: ${savedTask.id}")
         return savedTask.toResponse()
     }
 
-    fun updateTask(id: String, request: TaskRequest): TaskResponse {
+    fun updateTask(
+        id: String,
+        request: TaskRequest,
+    ): TaskResponse {
         logger.info("Updating task with id: $id")
-        val existingTask = taskRepository.findById(id)
-            .orElseThrow {
-                notFound(id)
-            }
-        val updatedTask = existingTask.copy(
-            description = request.description,
-            completed = request.completed,
-            updatedAt = LocalDateTime.now()
-        )
+        val existingTask =
+            taskRepository
+                .findById(id)
+                .orElseThrow {
+                    notFound(id)
+                }
+        val updatedTask =
+            existingTask.copy(
+                description = request.description,
+                completed = request.completed,
+                updatedAt = LocalDateTime.now(),
+            )
         val savedTask = taskRepository.save(updatedTask)
         logger.info("Task updated with id: $id")
         return savedTask.toResponse()
@@ -58,26 +70,34 @@ class TaskService(private val taskRepository: TaskRepository) {
 
     fun deleteTask(id: String) {
         logger.info("Deleting task with id: $id")
-        val task = taskRepository.findById(id)
-            .orElseThrow {
-                notFound(id)
-            }
+        val task =
+            taskRepository
+                .findById(id)
+                .orElseThrow {
+                    notFound(id)
+                }
         taskRepository.delete(task)
         logger.info("Task deleted with id: $id")
     }
 
     @Transactional
-    fun partialUpdateTask(id: String, updates: Map<String, Any>): TaskResponse {
+    fun partialUpdateTask(
+        id: String,
+        updates: Map<String, Any>,
+    ): TaskResponse {
         logger.info("Partially updating task with id: $id with updates: $updates")
-        val existingTask = taskRepository.findById(id)
-            .orElseThrow {
-                notFound(id)
-            }
-        val updatedTask = existingTask.copy(
-            description = updates["description"]?.toString() ?: existingTask.description,
-            completed = updates["completed"] as? Boolean ?: existingTask.completed,
-            updatedAt = LocalDateTime.now()
-        )
+        val existingTask =
+            taskRepository
+                .findById(id)
+                .orElseThrow {
+                    notFound(id)
+                }
+        val updatedTask =
+            existingTask.copy(
+                description = updates["description"]?.toString() ?: existingTask.description,
+                completed = updates["completed"] as? Boolean ?: existingTask.completed,
+                updatedAt = LocalDateTime.now(),
+            )
         val savedTask = taskRepository.save(updatedTask)
         logger.info("Task partially updated with id: $id")
         return savedTask.toResponse()

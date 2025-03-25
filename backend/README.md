@@ -2,6 +2,13 @@
 
 to access the api docs, run the backend and access `http://localhost:3080/swagger.html`
 
+## Todo
+
+- api auth for all stuff
+- swagger input fields for all endpoints
+- test ci/cd
+-
+
 ## curl Commands to Test the API
 
 1. Create a User
@@ -10,11 +17,11 @@ to access the api docs, run the backend and access `http://localhost:3080/swagge
   curl -s -X POST "http://localhost:3080/api/v1/users?username=john&password=secret"
   ```
 
-  Response: User JSON with auto-generated id.
+Response: User JSON with auto-generated id.
 
 2. Obtain a JWT (Minimal Example)
 
-  If you have an AuthController that issues JWT upon login, for example:
+If you have an AuthController that issues JWT upon login, for example:
 
   ```shell
   curl -s -X POST \
@@ -23,7 +30,7 @@ to access the api docs, run the backend and access `http://localhost:3080/swagge
     http://localhost:3080/api/v1/auth/login
   ```
 
-  Response: Something like { "token": "eyJhbGci..." }
+Response: Something like { "token": "eyJhbGci..." }
 
 3. Create a Task (Authenticated)
 
@@ -64,7 +71,6 @@ to login into the mongodb run the following commands
 ```bash
 docker exec -ti mongodb mongosh
 use admin
-use admin
 db.auth("app", "test1234")
 use todoapp
 show collections
@@ -72,3 +78,8 @@ db.users.find().pretty()
 db.tasks.find().pretty()
 db.users.getIndexes()
 ```
+
+## Linting in IntelliJ
+
+Go to Editor > Code Style > Kotlin, then select "Imports" and choose "Use single name import".
+

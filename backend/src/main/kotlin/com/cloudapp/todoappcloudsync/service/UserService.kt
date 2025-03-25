@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: BCryptPasswordEncoder
+    private val passwordEncoder: BCryptPasswordEncoder,
 ) {
     companion object {
         private val logger = LoggerFactory.getLogger(UserService::class.java)
@@ -29,7 +29,10 @@ class UserService(
         return userRepository.findAllByUsername(username).firstOrNull()
     }
 
-    fun registerUser(username: String, rawPassword: String): User {
+    fun registerUser(
+        username: String,
+        rawPassword: String,
+    ): User {
         logger.info("Registering user: $username")
         if (userRepository.findAllByUsername(username).isNotEmpty()) {
             logger.warn("User with username $username already exists")
