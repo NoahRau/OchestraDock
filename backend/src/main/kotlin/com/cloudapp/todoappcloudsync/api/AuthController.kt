@@ -37,6 +37,10 @@ class AuthController(
     )
     @PostMapping("/login")
     fun login(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Login credentials",
+            required = true
+        )
         @RequestBody request: LoginRequest,
     ): ResponseEntity<Any> {
         logger.info("Login attempt for user: ${request.username}")

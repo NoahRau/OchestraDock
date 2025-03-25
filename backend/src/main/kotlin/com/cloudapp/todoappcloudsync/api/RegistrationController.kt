@@ -38,6 +38,10 @@ class RegistrationController(
     )
     @PostMapping("/register")
     fun register(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "User registration info",
+            required = true
+        )
         @RequestBody request: RegistrationRequest,
     ): ResponseEntity<Any> {
         logger.info("Received registration request for username: ${request.username}")

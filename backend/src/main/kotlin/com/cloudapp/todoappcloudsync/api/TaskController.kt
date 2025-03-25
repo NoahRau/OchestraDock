@@ -55,7 +55,7 @@ class TaskController(
     )
     @GetMapping("/{id}")
     fun getTask(
-        @Parameter(description = "ID of the task to fetch")
+        @Parameter(description = "ID of the task to fetch", example = "1234567890abc")
         @PathVariable id: String,
     ): ResponseEntity<TaskResponse> {
         logger.info("Fetching task with id: $id")
@@ -71,13 +71,16 @@ class TaskController(
     )
     @PostMapping
     fun createTask(
+        @Parameter(description = "ID of the user creating the task", example = "user123")
+        @RequestParam userId: String,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Task data to create",
+            required = true
         )
         @RequestBody taskRequest: TaskRequest,
     ): ResponseEntity<TaskResponse> {
-        logger.info("Creating task with description: ${taskRequest.description}")
-        val response = taskService.createTask(taskRequest, userId = "demoUser")
+        logger.info("Creating task for userId: $userId with description: ${taskRequest.description}")
+        val response = taskService.createTask(taskRequest, userId = userId)
         logger.info("Task created with id: ${response.id}")
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
@@ -91,7 +94,12 @@ class TaskController(
     )
     @PutMapping("/{id}")
     fun updateTask(
+        @Parameter(description = "ID of the task to update", example = "1234567890abc")
         @PathVariable id: String,
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Updated task data",
+            required = true
+        )
         @RequestBody taskRequest: TaskRequest,
     ): ResponseEntity<TaskResponse> {
         logger.info("Updating task with id: $id")
@@ -109,6 +117,7 @@ class TaskController(
     )
     @DeleteMapping("/{id}")
     fun deleteTask(
+        @Parameter(description = "ID of the task to delete", example = "1234567890abc")
         @PathVariable id: String,
     ): ResponseEntity<Void> {
         logger.info("Deleting task with id: $id")
@@ -126,7 +135,12 @@ class TaskController(
     )
     @PatchMapping("/{id}")
     fun partialUpdateTask(
+        @Parameter(description = "ID of the task to update", example = "1234567890abc")
         @PathVariable id: String,
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Map of fields to update",
+            required = true
+        )
         @RequestBody updates: Map<String, Any>,
     ): ResponseEntity<TaskResponse> {
         logger.info("Partially updating task with id: $id, updates: $updates")
@@ -146,9 +160,9 @@ class TaskController(
     )
     @GetMapping("/status")
     fun getTasksByCompletionStatus(
-        @Parameter(description = "Completion status to filter tasks by")
+        @Parameter(description = "Completion status to filter tasks by", example = "true")
         @RequestParam completed: Boolean,
-    ): ResponseEntity<List<TaskResponse>> { // <- Change from List<Unit>
+    ): ResponseEntity<List<TaskResponse>> {
         logger.info("Fetching tasks with completed status: $completed")
         return ResponseEntity.ok(taskService.getTasksByCompletionStatus(completed))
     }

@@ -8,8 +8,8 @@ import jakarta.validation.constraints.Size
 data class TaskRequest(
     @field:NotEmpty
     @field:Size(max = 255)
-    @Schema(description = "A short description of the task", example = "Buy groceries")
+    @field:Schema(description = "A short description of the task", example = "Buy groceries")
     val description: String,
-    @Schema(description = "Flag indicating if the task is completed", example = "false")
+    @field:Schema(description = "Flag indicating if the task is completed", example = "false")
     val completed: Boolean = false,
 )

@@ -3,6 +3,7 @@ package com.cloudapp.todoappcloudsync.api
 import com.cloudapp.todoappcloudsync.model.User
 import com.cloudapp.todoappcloudsync.service.UserService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -31,6 +32,7 @@ class UserController(
     )
     @GetMapping("/{id}")
     fun getUser(
+        @Parameter(description = "ID of the user to fetch", example = "user-123")
         @PathVariable id: String,
     ): User {
         logger.info("Fetching user with id: $id")
