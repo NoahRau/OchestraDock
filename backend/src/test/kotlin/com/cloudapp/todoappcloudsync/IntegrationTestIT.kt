@@ -8,12 +8,12 @@ import com.cloudapp.todoappcloudsync.dto.UserResponse
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.core.annotation.Order
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -68,14 +68,20 @@ class IntegrationTestIT(
     @Order(2)
     @Test
     fun `login user`() {
-        val loginResponse =
-            restTemplate.postForEntity(
-                "/api/v1/auth/login",
-                LoginRequest("testuser", "password"),
-                Map::class.java,
-            )
-        assertEquals(HttpStatus.OK, loginResponse.statusCode)
-        token = loginResponse.body?.get("token")?.toString() ?: fail("JWT token should not be null")
+        val loginRequest = LoginRequest("testuser", "password")
+        val response = restTemplate.postForEntity(
+            "/api/v1/auth/login",
+            loginRequest,
+            Any::class.java
+        )
+
+        if (response.statusCode != HttpStatus.OK) {
+            fail("Login failed: ${response.body}")
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        val body = response.body as? Map<String, Any> ?: fail("Expected a JSON object response")
+        token = body["token"]?.toString() ?: fail("Token not found in response")
     }
 
     @Order(3)
