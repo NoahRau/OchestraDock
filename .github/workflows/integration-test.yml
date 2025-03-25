@@ -4,6 +4,7 @@ on:
   pull_request:
     branches: [main]
 
+jobs:
   integration-tests:
     name: Integration Tests (with MongoDB)
     runs-on: ubuntu-latest
