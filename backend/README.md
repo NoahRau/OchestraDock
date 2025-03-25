@@ -56,3 +56,19 @@ to access the api docs, run the backend and access `http://localhost:3080/swagge
     -d '{"completed": true}'
 
   ```
+
+## Show the MongoDB Stuff
+
+to login into the mongodb run the following commands
+
+```bash
+docker exec -ti mongodb mongosh
+use admin
+use admin
+db.auth("app", "test1234")
+use todoapp
+show collections
+db.users.find().pretty()
+db.tasks.find().pretty()
+db.users.getIndexes()
+```
