@@ -28,9 +28,9 @@ class TaskController(private val taskService: TaskService) {
         ]
     )
     @GetMapping
-    fun getAllTasks(): ResponseEntity<List<Unit>> {
+    fun getAllTasks(): List<TaskResponse> {
         logger.info("Fetching all tasks")
-        return ResponseEntity.ok(taskService.getAllTasks())
+        return taskService.getAllTasks()
     }
 
     @Operation(summary = "Retrieve a single task by ID", description = "Returns the task with the given ID.")
@@ -121,7 +121,7 @@ class TaskController(private val taskService: TaskService) {
     @GetMapping("/status")
     fun getTasksByCompletionStatus(
         @RequestParam completed: Boolean
-    ): ResponseEntity<List<Unit>> {
+    ): ResponseEntity<List<TaskResponse>> { // <- Change from List<Unit>
         logger.info("Fetching tasks with completed status: $completed")
         return ResponseEntity.ok(taskService.getTasksByCompletionStatus(completed))
     }

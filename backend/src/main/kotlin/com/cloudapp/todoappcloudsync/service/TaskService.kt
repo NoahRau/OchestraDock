@@ -17,7 +17,7 @@ class TaskService(private val taskRepository: TaskRepository) {
         private val logger = LoggerFactory.getLogger(TaskService::class.java)
     }
 
-    fun getAllTasks(): List<Unit> {
+    fun getAllTasks(): List<TaskResponse> {
         logger.info("Retrieving all tasks")
         return taskRepository.findAll().map { it.toResponse() }
     }
@@ -26,8 +26,7 @@ class TaskService(private val taskRepository: TaskRepository) {
         logger.info("Fetching task with id: $id")
         return taskRepository.findById(id)
             .orElseThrow {
-                logger.error("Task with id $id not found")
-                ResourceNotFoundException("Task with id $id not found")
+                notFound(id)
             }
             .toResponse()
     }
@@ -45,8 +44,7 @@ class TaskService(private val taskRepository: TaskRepository) {
         logger.info("Updating task with id: $id")
         val existingTask = taskRepository.findById(id)
             .orElseThrow {
-                logger.error("Task with id $id not found")
-                ResourceNotFoundException("Task with id $id not found")
+                notFound(id)
             }
         val updatedTask = existingTask.copy(
             description = request.description,
@@ -62,8 +60,7 @@ class TaskService(private val taskRepository: TaskRepository) {
         logger.info("Deleting task with id: $id")
         val task = taskRepository.findById(id)
             .orElseThrow {
-                logger.error("Task with id $id not found")
-                ResourceNotFoundException("Task with id $id not found")
+                notFound(id)
             }
         taskRepository.delete(task)
         logger.info("Task deleted with id: $id")
@@ -74,8 +71,7 @@ class TaskService(private val taskRepository: TaskRepository) {
         logger.info("Partially updating task with id: $id with updates: $updates")
         val existingTask = taskRepository.findById(id)
             .orElseThrow {
-                logger.error("Task with id $id not found")
-                ResourceNotFoundException("Task with id $id not found")
+                notFound(id)
             }
         val updatedTask = existingTask.copy(
             description = updates["description"]?.toString() ?: existingTask.description,
@@ -87,8 +83,13 @@ class TaskService(private val taskRepository: TaskRepository) {
         return savedTask.toResponse()
     }
 
-    fun getTasksByCompletionStatus(completed: Boolean): List<Unit> {
+    fun getTasksByCompletionStatus(completed: Boolean): List<TaskResponse> {
         logger.info("Fetching tasks with completed status: $completed")
         return taskRepository.findByCompleted(completed).map { it.toResponse() }
+    }
+
+    private fun notFound(id: String): Nothing {
+        logger.error("Task with id $id not found")
+        throw ResourceNotFoundException("Task with id $id not found")
     }
 }

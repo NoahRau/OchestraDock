@@ -16,15 +16,6 @@ class UserService(
         private val logger = LoggerFactory.getLogger(UserService::class.java)
     }
 
-    fun createUser(username: String, password: String): User {
-        logger.info("Creating user with username: $username")
-        val encodedPassword = passwordEncoder.encode(password)
-        val user = User(username = username, password = encodedPassword)
-        val savedUser = userRepository.save(user)
-        logger.info("User saved: ${savedUser.username} with id: ${savedUser.id}")
-        return savedUser
-    }
-
     fun getUserById(id: String): User {
         logger.info("Fetching user with id: $id")
         return userRepository.findById(id).orElseThrow {
@@ -35,12 +26,12 @@ class UserService(
 
     fun findByUsername(username: String): User? {
         logger.info("Finding user by username: $username")
-        return userRepository.findByUsername(username).orElse(null)
+        return userRepository.findAllByUsername(username).firstOrNull()
     }
 
     fun registerUser(username: String, rawPassword: String): User {
         logger.info("Registering user: $username")
-        if (userRepository.findByUsername(username).isPresent) {
+        if (userRepository.findAllByUsername(username).isNotEmpty()) {
             logger.warn("User with username $username already exists")
             throw IllegalArgumentException("User with username $username already exists.")
         }

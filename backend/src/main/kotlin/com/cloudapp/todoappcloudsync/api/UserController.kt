@@ -17,21 +17,6 @@ class UserController(private val userService: UserService) {
         private val logger = LoggerFactory.getLogger(UserController::class.java)
     }
 
-    @Operation(summary = "Create a user", description = "Creates a new user with the given username and password.")
-    @ApiResponses(
-        value = [
-            ApiResponse(responseCode = "200", description = "User successfully created"),
-            ApiResponse(responseCode = "400", description = "Invalid request data")
-        ]
-    )
-    @PostMapping
-    fun createUser(@RequestParam username: String, @RequestParam password: String): User {
-        logger.info("Creating user: $username")
-        val user = userService.createUser(username, password)
-        logger.info("User created: ${user.username} with id: ${user.id}")
-        return user
-    }
-
     @Operation(summary = "Retrieve user by ID", description = "Returns the user with the specified ID.")
     @ApiResponses(
         value = [
