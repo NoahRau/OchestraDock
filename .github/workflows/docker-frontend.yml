@@ -33,4 +33,4 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner | lower }}/todoapp-frontend:latest
+          tags: ghcr.io/noahrau/todoapp-frontend:latest
