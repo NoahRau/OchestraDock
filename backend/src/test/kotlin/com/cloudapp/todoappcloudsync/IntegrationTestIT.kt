@@ -69,11 +69,12 @@ class IntegrationTestIT(
     @Test
     fun `login user`() {
         val loginRequest = LoginRequest("testuser", "password")
-        val response = restTemplate.postForEntity(
-            "/api/v1/auth/login",
-            loginRequest,
-            Any::class.java
-        )
+        val response =
+            restTemplate.postForEntity(
+                "/api/v1/auth/login",
+                loginRequest,
+                Any::class.java,
+            )
 
         if (response.statusCode != HttpStatus.OK) {
             fail("Login failed: ${response.body}")
