@@ -50,6 +50,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Run unit tests
+        working-directory: ./backend
         run: mvn clean test
 
   integration-tests:
@@ -86,6 +87,7 @@ jobs:
           echo "MongoDB is up!"
 
       - name: Run integration tests
+        working-directory: ./backend
         env:
           DB_HOST: localhost
           DB_PORT: 27017
