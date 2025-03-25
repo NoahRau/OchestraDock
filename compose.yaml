@@ -10,6 +10,19 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "127.0.0.1/test",
+          "--eval",
+          "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   backend:
     build:
@@ -26,7 +39,16 @@ services:
       - JWT_SECRET=your-very-long-secure-secret-string-32+chars
       - REGISTRATION_ENABLED=true
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "curl -s http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"
+      ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
   frontend:
     build:
@@ -35,7 +57,8 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
       
 volumes:
   mongo-data:

@@ -1,6 +1,6 @@
 # API Docs
 
-to access the api docs, run the backend and access `http://localhost:3080/swagger-ui/index.html`
+to access the api docs, run the backend and access `http://localhost:3080/swagger.html`
 
 ## curl Commands to Test the API
 
