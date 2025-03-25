@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="spring-boot" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <envs>
+      <env name="DB_HOST" value="localhost" />
+      <env name="DB_PORT" value="27017" />
+      <env name="DB_NAME" value="todoapp" />
+      <env name="DB_USERNAME" value="app" />
+      <env name="DB_PASSWORD" value="test1234" />
+      <env name="JWT_SECRET" value="vdmspvbopsjpobgsjpokgüpsküpgksüpkgpüksüobkkmbsoksüpfb" />
+      <env name="REGISTRATION_ENABLED" value="true" />
+    </envs>
+    <module name="ToDoAppCloudsync" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.cloudapp.todoappcloudsync.ToDoAppCloudsyncApplicationKt" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

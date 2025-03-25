@@ -1,0 +1,22 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="IntegrationTestIT" type="JUnit" factoryName="JUnit" nameIsGenerated="true">
+    <module name="ToDoAppCloudsync" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.cloudapp.todoappcloudsync.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="com.cloudapp.todoappcloudsync" />
+    <option name="MAIN_CLASS_NAME" value="com.cloudapp.todoappcloudsync.IntegrationTestIT" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="class" />
+    <envs>
+      <env name="JWT_SECRET" value="vdmspvbopsjpobgsjpokgüpsküpgksüpkgpüksüobkkmbsoksüpfb" />
+      <env name="REGISTRATION_ENABLED" value="true" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
