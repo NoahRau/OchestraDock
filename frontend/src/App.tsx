@@ -10,7 +10,7 @@ interface Task {
   updatedAt: string;
 }
 
-const API_BASE_URL = "http://localhost:3080";
+const API_BASE_URL = "http://localhost:3080/api/v1";
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
