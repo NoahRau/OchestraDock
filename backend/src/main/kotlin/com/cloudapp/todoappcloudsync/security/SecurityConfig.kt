@@ -5,15 +5,17 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import javax.crypto.SecretKey
 
 @Configuration
+@EnableWebSecurity
 class SecurityConfig(
     @Value("\${security.disableJwt:false}")
     private val disableJwt: Boolean,
@@ -23,7 +25,6 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         if (disableJwt) {
-            // Disable JWT: Permit all requests without JWT authentication
             http
                 .csrf { it.disable() }
                 .authorizeHttpRequests { it.anyRequest().permitAll() }
@@ -36,12 +37,16 @@ class SecurityConfig(
                         .requestMatchers(
                             "/v3/api-docs/**",
                             "/swagger-ui/**",
-                            "/api/v1/auth/**",
-                            "/api/v1/docs/**",
+                            "/swagger.html",
+                            "/api/v1/auth/login",
+                            "/api/v1/auth/register",
+                            "/api/v1/docs/**"
                         ).permitAll()
                         .anyRequest()
                         .authenticated()
-                }.oauth2ResourceServer { it.jwt(Customizer.withDefaults()) }
+                }
+            // Register custom JWT authentication filter before UsernamePasswordAuthenticationFilter
+            http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter::class.java)
             return http.build()
         }
     }
@@ -68,4 +73,7 @@ class SecurityConfig(
         val key: SecretKey = Keys.hmacShaKeyFor(keyBytes)
         return JwtUtil(key)
     }
+
+    @Bean
+    fun jwtAuthenticationFilter(): JwtAuthenticationFilter = JwtAuthenticationFilter(jwtUtil())
 }

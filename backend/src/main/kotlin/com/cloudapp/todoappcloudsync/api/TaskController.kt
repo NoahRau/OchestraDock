@@ -7,10 +7,13 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,9 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Tasks", description = "Task management endpoints")
+@SecurityRequirement(name = "bearerAuth")
 @CrossOrigin(origins = ["http://localhost:3001"])
 @RestController
 @RequestMapping("/api/v1/tasks")
+@Validated
 class TaskController(
     private val taskService: TaskService,
 ) {
@@ -38,6 +43,7 @@ class TaskController(
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Successful operation"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @GetMapping
@@ -51,6 +57,7 @@ class TaskController(
         value = [
             ApiResponse(responseCode = "200", description = "Successful operation"),
             ApiResponse(responseCode = "404", description = "Task not found"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @GetMapping("/{id}")
@@ -58,7 +65,7 @@ class TaskController(
         @Parameter(description = "ID of the task to fetch", example = "1234567890abc")
         @PathVariable id: String,
     ): ResponseEntity<TaskResponse> {
-        logger.info("Fetching task with id: $id")
+        logger.info("Fetching task with id: {}", id)
         return ResponseEntity.ok(taskService.getTaskById(id))
     }
 
@@ -67,6 +74,7 @@ class TaskController(
         value = [
             ApiResponse(responseCode = "201", description = "Task created"),
             ApiResponse(responseCode = "400", description = "Invalid request data"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @PostMapping
@@ -75,13 +83,14 @@ class TaskController(
         @RequestParam userId: String,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Task data to create",
-            required = true
+            required = true,
         )
+        @Valid
         @RequestBody taskRequest: TaskRequest,
     ): ResponseEntity<TaskResponse> {
-        logger.info("Creating task for userId: $userId with description: ${taskRequest.description}")
+        logger.info("Creating task for userId: {} with description: {}", userId, taskRequest.description)
         val response = taskService.createTask(taskRequest, userId = userId)
-        logger.info("Task created with id: ${response.id}")
+        logger.info("Task created with id: {}", response.id)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 
@@ -90,6 +99,7 @@ class TaskController(
         value = [
             ApiResponse(responseCode = "200", description = "Task updated"),
             ApiResponse(responseCode = "404", description = "Task not found"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @PutMapping("/{id}")
@@ -98,13 +108,14 @@ class TaskController(
         @PathVariable id: String,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Updated task data",
-            required = true
+            required = true,
         )
+        @Valid
         @RequestBody taskRequest: TaskRequest,
     ): ResponseEntity<TaskResponse> {
-        logger.info("Updating task with id: $id")
+        logger.info("Updating task with id: {}", id)
         val response = taskService.updateTask(id, taskRequest)
-        logger.info("Task updated with id: $id")
+        logger.info("Task updated with id: {}", id)
         return ResponseEntity.ok(response)
     }
 
@@ -113,6 +124,7 @@ class TaskController(
         value = [
             ApiResponse(responseCode = "204", description = "Task deleted"),
             ApiResponse(responseCode = "404", description = "Task not found"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @DeleteMapping("/{id}")
@@ -120,9 +132,9 @@ class TaskController(
         @Parameter(description = "ID of the task to delete", example = "1234567890abc")
         @PathVariable id: String,
     ): ResponseEntity<Void> {
-        logger.info("Deleting task with id: $id")
+        logger.info("Deleting task with id: {}", id)
         taskService.deleteTask(id)
-        logger.info("Task deleted with id: $id")
+        logger.info("Task deleted with id: {}", id)
         return ResponseEntity.noContent().build()
     }
 
@@ -131,6 +143,7 @@ class TaskController(
         value = [
             ApiResponse(responseCode = "200", description = "Task partially updated"),
             ApiResponse(responseCode = "404", description = "Task not found"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @PatchMapping("/{id}")
@@ -139,13 +152,13 @@ class TaskController(
         @PathVariable id: String,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Map of fields to update",
-            required = true
+            required = true,
         )
         @RequestBody updates: Map<String, Any>,
     ): ResponseEntity<TaskResponse> {
-        logger.info("Partially updating task with id: $id, updates: $updates")
+        logger.info("Partially updating task with id: {} with updates: {}", id, updates)
         val response = taskService.partialUpdateTask(id, updates)
-        logger.info("Task partially updated with id: $id")
+        logger.info("Task partially updated with id: {}", id)
         return ResponseEntity.ok(response)
     }
 
@@ -156,6 +169,7 @@ class TaskController(
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "Successful operation"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
         ],
     )
     @GetMapping("/status")
@@ -163,7 +177,7 @@ class TaskController(
         @Parameter(description = "Completion status to filter tasks by", example = "true")
         @RequestParam completed: Boolean,
     ): ResponseEntity<List<TaskResponse>> {
-        logger.info("Fetching tasks with completed status: $completed")
+        logger.info("Fetching tasks with completed status: {}", completed)
         return ResponseEntity.ok(taskService.getTasksByCompletionStatus(completed))
     }
 }

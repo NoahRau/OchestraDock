@@ -6,22 +6,8 @@ on:
 
 jobs:
   integration-tests:
-    name: Integration Tests (with MongoDB)
+    name: Integration Tests (with Testcontainers)
     runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo:7.0
-        ports:
-          - 27017:27017
-        env:
-          MONGO_INITDB_ROOT_USERNAME: root
-          MONGO_INITDB_ROOT_PASSWORD: example
-        options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })' --username root --password example --authenticationDatabase admin"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     steps:
       - uses: actions/checkout@v4
@@ -38,19 +24,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Wait for MongoDB
-        run: |
-          until nc -z localhost 27017; do
-            echo "Waiting for MongoDB..."
-            sleep 1
-          done
-          echo "MongoDB is up!"
-
       - name: Run integration tests
         working-directory: ./backend
         env:
-          DB_HOST: localhost
-          DB_PORT: 27017
           DB_NAME: todoapp_test
           DB_USERNAME: root
           DB_PASSWORD: example

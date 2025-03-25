@@ -25,24 +25,20 @@ class TaskService(
     }
 
     fun getTaskById(id: String): TaskResponse {
-        logger.info("Fetching task with id: $id")
-        return taskRepository
-            .findById(id)
-            .orElseThrow {
-                notFound(id)
-            }.toResponse()
+        logger.info("Fetching task with id: {}", id)
+        return taskRepository.findById(id).orElseThrow { notFound(id) }.toResponse()
     }
 
     fun createTask(
         request: TaskRequest,
         userId: String,
     ): TaskResponse {
-        logger.info("Creating task for user: $userId with description: ${request.description}")
+        logger.info("Creating task for user: {} with description: {}", userId, request.description)
         val savedTask =
             taskRepository.save(
                 Task(description = request.description, completed = request.completed, userId = userId),
             )
-        logger.info("Task created with id: ${savedTask.id}")
+        logger.info("Task created with id: {}", savedTask.id)
         return savedTask.toResponse()
     }
 
@@ -50,13 +46,8 @@ class TaskService(
         id: String,
         request: TaskRequest,
     ): TaskResponse {
-        logger.info("Updating task with id: $id")
-        val existingTask =
-            taskRepository
-                .findById(id)
-                .orElseThrow {
-                    notFound(id)
-                }
+        logger.info("Updating task with id: {}", id)
+        val existingTask = taskRepository.findById(id).orElseThrow { notFound(id) }
         val updatedTask =
             existingTask.copy(
                 description = request.description,
@@ -64,20 +55,15 @@ class TaskService(
                 updatedAt = LocalDateTime.now(),
             )
         val savedTask = taskRepository.save(updatedTask)
-        logger.info("Task updated with id: $id")
+        logger.info("Task updated with id: {}", id)
         return savedTask.toResponse()
     }
 
     fun deleteTask(id: String) {
-        logger.info("Deleting task with id: $id")
-        val task =
-            taskRepository
-                .findById(id)
-                .orElseThrow {
-                    notFound(id)
-                }
+        logger.info("Deleting task with id: {}", id)
+        val task = taskRepository.findById(id).orElseThrow { notFound(id) }
         taskRepository.delete(task)
-        logger.info("Task deleted with id: $id")
+        logger.info("Task deleted with id: {}", id)
     }
 
     @Transactional
@@ -85,13 +71,8 @@ class TaskService(
         id: String,
         updates: Map<String, Any>,
     ): TaskResponse {
-        logger.info("Partially updating task with id: $id with updates: $updates")
-        val existingTask =
-            taskRepository
-                .findById(id)
-                .orElseThrow {
-                    notFound(id)
-                }
+        logger.info("Partially updating task with id: {} with updates: {}", id, updates)
+        val existingTask = taskRepository.findById(id).orElseThrow { notFound(id) }
         val updatedTask =
             existingTask.copy(
                 description = updates["description"]?.toString() ?: existingTask.description,
@@ -99,17 +80,17 @@ class TaskService(
                 updatedAt = LocalDateTime.now(),
             )
         val savedTask = taskRepository.save(updatedTask)
-        logger.info("Task partially updated with id: $id")
+        logger.info("Task partially updated with id: {}", id)
         return savedTask.toResponse()
     }
 
     fun getTasksByCompletionStatus(completed: Boolean): List<TaskResponse> {
-        logger.info("Fetching tasks with completed status: $completed")
+        logger.info("Fetching tasks with completed status: {}", completed)
         return taskRepository.findByCompleted(completed).map { it.toResponse() }
     }
 
     private fun notFound(id: String): Nothing {
-        logger.error("Task with id $id not found")
+        logger.error("Task with id {} not found", id)
         throw ResourceNotFoundException("Task with id $id not found")
     }
 }

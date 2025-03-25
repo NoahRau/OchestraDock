@@ -17,15 +17,15 @@ class UserService(
     }
 
     fun getUserById(id: String): User {
-        logger.info("Fetching user with id: $id")
+        logger.info("Fetching user with id: {}", id)
         return userRepository.findById(id).orElseThrow {
-            logger.error("User with id $id not found")
+            logger.error("User with id {} not found", id)
             ResourceNotFoundException("User with id $id not found")
         }
     }
 
     fun findByUsername(username: String): User? {
-        logger.info("Finding user by username: $username")
+        logger.info("Finding user by username: {}", username)
         return userRepository.findAllByUsername(username).firstOrNull()
     }
 
@@ -33,15 +33,15 @@ class UserService(
         username: String,
         rawPassword: String,
     ): User {
-        logger.info("Registering user: $username")
+        logger.info("Registering user: {}", username)
         if (userRepository.findAllByUsername(username).isNotEmpty()) {
-            logger.warn("User with username $username already exists")
+            logger.warn("User with username {} already exists", username)
             throw IllegalArgumentException("User with username $username already exists.")
         }
         val encodedPassword = passwordEncoder.encode(rawPassword)
         val user = User(username = username, password = encodedPassword)
         val savedUser = userRepository.save(user)
-        logger.info("User registered successfully: ${savedUser.username} with id: ${savedUser.id}")
+        logger.info("User registered successfully: {} with id: {}", savedUser.username, savedUser.id)
         return savedUser
     }
 }

@@ -9,6 +9,6 @@ data class LoginRequest(
     @field:Schema(description = "Username of the user", example = "johndoe")
     val username: String,
     @field:NotEmpty(message = "Password must not be empty")
-    @field:Schema(description = "Password of the user", example = "password123")
+    @field:Schema(description = "Password of the user", example = "securePass123")
     val password: String,
 )
