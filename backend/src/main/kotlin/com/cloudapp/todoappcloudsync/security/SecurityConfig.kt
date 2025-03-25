@@ -40,7 +40,7 @@ class SecurityConfig(
                             "/swagger.html",
                             "/api/v1/auth/login",
                             "/api/v1/auth/register",
-                            "/api/v1/docs/**"
+                            "/api/v1/docs/**",
                         ).permitAll()
                         .anyRequest()
                         .authenticated()
