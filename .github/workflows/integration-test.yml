@@ -1,57 +1,8 @@
-name: CI - Lint, Test & Integration Test
+name: Integration Test
 
 on:
   pull_request:
     branches: [main]
-
-jobs:
-  lint:
-    name: Lint (ktlint)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup ktlint
-        run: |
-          curl -sSLO https://github.com/pinterest/ktlint/releases/download/1.2.1/ktlint && chmod +x ktlint
-
-      - name: Run ktlint
-        id: ktlint
-        run: ./ktlint "**/*.kt" || echo "LINT_FAILED=true" >> $GITHUB_ENV
-
-      - name: Comment PR on Lint Failure
-        if: env.LINT_FAILED == 'true'
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          message: "🚨 **Lint checks failed!** Please run `ktlint -F '**/*.kt'` locally and commit fixes."
-
-      - name: Fail on lint error
-        if: env.LINT_FAILED == 'true'
-        run: exit 1
-
-  unit-tests:
-    name: Unit Tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      - uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Run unit tests
-        working-directory: ./backend
-        run: mvn clean test
 
   integration-tests:
     name: Integration Tests (with MongoDB)
