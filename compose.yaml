@@ -42,26 +42,14 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
-    healthcheck:
-      test: [
-        "CMD-SHELL",
-        "curl -s http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"
-      ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
+  # frontend:
+  #   #image: ghcr.io/noahrau/todoapp-frontend:latest
+  #   build:
+  #     context: ./frontend
+  #   container_name: frontend
+  #   ports:
+  #     - "3000:80"
 
-  frontend:
-    #image: ghcr.io/noahrau/todoapp-frontend:latest
-    build:
-      context: ./frontend
-    container_name: frontend
-    ports:
-      - "3000:80"
-    depends_on:
-      backend:
-        condition: service_healthy
-      
 volumes:
   mongo-data:
   postgres-data:
