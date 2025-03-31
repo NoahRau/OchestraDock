@@ -42,13 +42,13 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
-  # frontend:
-  #   #image: ghcr.io/noahrau/todoapp-frontend:latest
-  #   build:
-  #     context: ./frontend
-  #   container_name: frontend
-  #   ports:
-  #     - "3000:80"
+  frontend:
+    #image: ghcr.io/noahrau/todoapp-frontend:latest
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
 
 volumes:
   mongo-data:
