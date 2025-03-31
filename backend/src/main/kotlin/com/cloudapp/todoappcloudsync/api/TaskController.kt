@@ -180,4 +180,21 @@ class TaskController(
         logger.info("Fetching tasks with completed status: {}", completed)
         return ResponseEntity.ok(taskService.getTasksByCompletionStatus(completed))
     }
+
+    @Operation(summary = "Retrieve all tasks by Project", description = "Returns the tasks with the given Project.")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Successful operation"),
+            ApiResponse(responseCode = "404", description = "Task not found"),
+            ApiResponse(responseCode = "401", description = "Unauthorized: JWT token is missing or invalid"),
+        ],
+    )
+    @GetMapping("/project")
+    fun getTaskByProject(
+        @Parameter(description = "Project of the tasks to fetch", example = "1234567890abc")
+        @RequestParam project: String,
+    ):  ResponseEntity<List<TaskResponse>> {
+        logger.info("Fetching task from Project: {}", project)
+        return ResponseEntity.ok(taskService.getTaskByProject(project))
+    }
 }
