@@ -29,10 +29,7 @@ class TaskService(
         return taskRepository.findById(id).orElseThrow { notFound(id) }.toResponse()
     }
 
-    fun getTaskByProject(project: String): TaskResponse {
-        logger.info("Fetching task with id: {}", project)
-        return taskRepository.findById(project).orElseThrow { notFound(project) }.toResponse()
-    }
+
 
     fun createTask(
         request: TaskRequest,
@@ -92,6 +89,11 @@ class TaskService(
     fun getTasksByCompletionStatus(completed: Boolean): List<TaskResponse> {
         logger.info("Fetching tasks with completed status: {}", completed)
         return taskRepository.findByCompleted(completed).map { it.toResponse() }
+    }
+
+    fun getTaskByProject(project: String): List<TaskResponse> {
+        logger.info("Fetching task with id: {}", project)
+        return taskRepository.findByProject(project).map { it.toResponse() }
     }
 
     private fun notFound(id: String): Nothing {

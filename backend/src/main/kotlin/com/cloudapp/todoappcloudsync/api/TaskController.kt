@@ -193,7 +193,7 @@ class TaskController(
     fun getTaskByProject(
         @Parameter(description = "Project of the tasks to fetch", example = "1234567890abc")
         @RequestParam project: String,
-    ): ResponseEntity<TaskResponse> {
+    ):  ResponseEntity<List<TaskResponse>> {
         logger.info("Fetching task from Project: {}", project)
         return ResponseEntity.ok(taskService.getTaskByProject(project))
     }
