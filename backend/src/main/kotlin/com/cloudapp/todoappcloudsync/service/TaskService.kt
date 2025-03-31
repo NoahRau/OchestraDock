@@ -29,6 +29,11 @@ class TaskService(
         return taskRepository.findById(id).orElseThrow { notFound(id) }.toResponse()
     }
 
+    fun getTaskByProject(project: String): TaskResponse {
+        logger.info("Fetching task with id: {}", project)
+        return taskRepository.findById(project).orElseThrow { notFound(project) }.toResponse()
+    }
+
     fun createTask(
         request: TaskRequest,
         userId: String,
@@ -36,7 +41,7 @@ class TaskService(
         logger.info("Creating task for user: {} with description: {}", userId, request.description)
         val savedTask =
             taskRepository.save(
-                Task(description = request.description, completed = request.completed, userId = userId),
+                Task(description = request.description,project=request.project, completed = request.completed, userId = userId),
             )
         logger.info("Task created with id: {}", savedTask.id)
         return savedTask.toResponse()
