@@ -13,6 +13,7 @@ import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -69,7 +70,7 @@ class TaskController(
         return ResponseEntity.ok(taskService.getTaskById(id))
     }
 
-    @Operation(summary = "Create a new task", description = "Creates a new task with the given data.")
+    @Operation(summary = "Create a new task", description = "Creates a new task using the authenticated user's identity.")
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "201", description = "Task created"),
@@ -79,8 +80,6 @@ class TaskController(
     )
     @PostMapping
     fun createTask(
-        @Parameter(description = "ID of the user creating the task", example = "user123")
-        @RequestParam userId: String,
         @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Task data to create",
             required = true,
@@ -88,7 +87,10 @@ class TaskController(
         @Valid
         @RequestBody taskRequest: TaskRequest,
     ): ResponseEntity<TaskResponse> {
-        logger.info("Creating task for userId: {} with description: {}", userId, taskRequest.description)
+        val authentication = SecurityContextHolder.getContext().authentication
+        val userId = authentication?.name ?: return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+
+        logger.info("Creating task for user: {} with description: {}", userId, taskRequest.description)
         val response = taskService.createTask(taskRequest, userId = userId)
         logger.info("Task created with id: {}", response.id)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
