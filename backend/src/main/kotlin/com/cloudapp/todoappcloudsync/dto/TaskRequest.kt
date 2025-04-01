@@ -3,6 +3,7 @@ package com.cloudapp.todoappcloudsync.dto
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
+import org.springframework.data.annotation.Id
 
 @Schema(description = "Represents the payload for creating or updating a Task")
 data class TaskRequest(
@@ -12,4 +13,6 @@ data class TaskRequest(
     val description: String,
     @field:Schema(description = "Flag indicating if the task is completed", example = "false")
     val completed: Boolean = false,
+    @field:Schema(description = "Flag indicating if the task is grouped in a Project", example = "example Project")
+    val project: String? = null,
 )

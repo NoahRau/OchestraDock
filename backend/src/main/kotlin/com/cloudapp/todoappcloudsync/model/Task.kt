@@ -10,6 +10,7 @@ import java.time.LocalDateTime
 data class Task(
     @Id
     val id: String? = null,
+    val project :String? = null,
     val description: String,
     val completed: Boolean = false,
     val userId: String? = null,

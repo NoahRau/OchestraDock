@@ -20,9 +20,9 @@ services:
           "--eval",
           "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 2)'",
         ]
-      interval: 10s
-      timeout: 10s
-      retries: 5
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   backend:
     # image: ghcr.io/noahrau/todoapp-backend:latest
@@ -57,7 +57,9 @@ services:
     container_name: frontend
     ports:
       - "3000:80"
-
+    depends_on:
+      backend:
+        condition: service_healthy
+      
 volumes:
   mongo-data:
-  postgres-data:
