@@ -1,9 +1,11 @@
 package com.cloudapp.todoappcloudsync.api
 
 import com.cloudapp.todoappcloudsync.dto.RegistrationRequest
-import com.cloudapp.todoappcloudsync.dto.UserResponse
 import com.cloudapp.todoappcloudsync.service.UserService
+import com.cloudapp.todoappcloudsync.utils.JwtUtil
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 @Validated
 class RegistrationController(
     private val userService: UserService,
+    private val jwtUtil: JwtUtil,
     @Value("\${app.registration.enabled:true}")
     private val registrationEnabled: Boolean,
 ) {
@@ -31,10 +34,22 @@ class RegistrationController(
         private val logger = LoggerFactory.getLogger(RegistrationController::class.java)
     }
 
-    @Operation(summary = "Register a new user", description = "Creates a new user account if registration is enabled.")
+    @Operation(summary = "Register a new user", description = "Creates a new user account and returns a JWT token.")
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "201", description = "User registered"),
+            ApiResponse(
+                responseCode = "201",
+                description = "User registered and token returned",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema =
+                            Schema(
+                                example = """{"token": "jwt-token-here"}""",
+                            ),
+                    ),
+                ],
+            ),
             ApiResponse(responseCode = "403", description = "Registration is disabled"),
             ApiResponse(responseCode = "400", description = "User already exists or invalid data"),
         ],
@@ -44,17 +59,18 @@ class RegistrationController(
         @Valid @RequestBody request: RegistrationRequest,
     ): ResponseEntity<Any> {
         logger.info("Received registration request for username: {}", request.username)
+
         if (!registrationEnabled) {
             logger.warn("Registration is disabled")
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Registration is currently disabled.")
         }
+
         val newUser = userService.registerUser(request.username, request.password)
         logger.info("User registered successfully: {} with id: {}", newUser.username, newUser.id)
-        val response =
-            UserResponse(
-                id = newUser.id ?: "N/A",
-                username = newUser.username,
-            )
-        return ResponseEntity.status(HttpStatus.CREATED).body(response)
+
+        val token = jwtUtil.generateToken(newUser.username)
+        logger.info("JWT generated for new user: {}", newUser.username)
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("token" to token))
     }
 }
