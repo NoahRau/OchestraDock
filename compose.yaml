@@ -39,9 +39,6 @@ services:
       - DB_PASSWORD=${db_pw}
       - JWT_SECRET=your-very-long-secure-secret-string-32+chars
       - REGISTRATION_ENABLED=true
-    depends_on:
-      mongodb:
-        condition: service_healthy
     healthcheck:
       test: [
         "CMD-SHELL",
@@ -49,7 +46,9 @@ services:
       ]
       interval: 5s
       timeout: 5s
-      retries: 10
+    depends_on:
+      mongodb:
+        condition: service_healthy
 
   frontend:
     #image: ghcr.io/noahrau/todoapp-frontend:latest
