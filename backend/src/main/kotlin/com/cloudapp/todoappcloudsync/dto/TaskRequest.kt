@@ -3,7 +3,6 @@ package com.cloudapp.todoappcloudsync.dto
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
-import org.springframework.data.annotation.Id
 
 @Schema(description = "Represents the payload for creating or updating a Task")
 data class TaskRequest(
