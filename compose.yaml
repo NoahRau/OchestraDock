@@ -40,10 +40,11 @@ services:
       - JWT_SECRET=your-very-long-secure-secret-string-32+chars
       - REGISTRATION_ENABLED=true
     healthcheck:
-      test: [
-        "CMD-SHELL",
-        "curl -s http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"
-      ]
+      test:
+        [
+          "CMD-SHELL",
+          'curl -s http://localhost:8080/actuator/health | grep -q ''"status":"UP"'' || exit 1',
+        ]
       interval: 5s
       timeout: 5s
     depends_on:
@@ -60,6 +61,6 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-      
+
 volumes:
   mongo-data:

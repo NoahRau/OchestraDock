@@ -1,7 +1,9 @@
 import { Navigate } from "react-router";
-import useAuthStore from "./authStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
-const ProtectedRoute = ({ children }) => {
+import { ReactNode } from "react";
+
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const accessToken = useAuthStore((state) => state.accessToken);
 
   if (!accessToken) {

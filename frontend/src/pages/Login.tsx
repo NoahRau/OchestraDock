@@ -1,3 +1,4 @@
+import ErrorAlert from "@/components/ErrorAlert";
 import LabeledInput from "@/components/LabeledInput";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,12 +15,12 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 
 function Login() {
+  const [err, setErr] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { accessToken, login } = useAuthStore();
   const navigate = useNavigate();
 
-  // ✅ Redirect if already logged in
   useEffect(() => {
     if (accessToken) {
       navigate("/", { replace: true });
@@ -38,11 +39,11 @@ function Login() {
       navigate("/");
     } catch (err) {
       console.error("Login fehlgeschlagen:", err);
-      alert("Login fehlgeschlagen. Bitte überprüfe deine Eingaben.");
+      setErr(true);
     }
   };
   return (
-    <main className="h-svh grid place-items-center bg-[url(/peter.avif)] bg-cover">
+    <main className="h-svh grid place-items-center bg-[url(/peter.avif)] bg-cover bg-center">
       <Card className="w-md">
         <CardHeader>
           <CardTitle>TODO-APP</CardTitle>
@@ -74,6 +75,12 @@ function Login() {
               onChange: (e) => setPassword(e.target.value),
             }}
           />
+          {err && (
+            <ErrorAlert
+              title="Fehler"
+              description="Falscher User oder Passwort."
+            />
+          )}
         </CardContent>
         <CardFooter>
           <Button

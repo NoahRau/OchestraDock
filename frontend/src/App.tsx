@@ -9,6 +9,7 @@ import List from "./pages/List";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ProtectedRoute from "@/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -40,15 +41,17 @@ function App() {
 
 function Sidebar({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        <main>
-          <SidebarTrigger />
-          {children}
-        </main>
-      </SidebarInset>
-    </SidebarProvider>
+    <ProtectedRoute>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarInset>
+          <main>
+            <SidebarTrigger />
+            {children}
+          </main>
+        </SidebarInset>
+      </SidebarProvider>
+    </ProtectedRoute>
   );
 }
 
