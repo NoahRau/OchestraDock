@@ -1,5 +1,5 @@
 # Use an official Node.js image to build the React app
-FROM node:20 as build
+FROM node:20 AS build
 WORKDIR /app
 
 # Copy package files and install dependencies

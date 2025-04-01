@@ -39,9 +39,17 @@ services:
       - DB_PASSWORD=${db_pw}
       - JWT_SECRET=your-very-long-secure-secret-string-32+chars
       - REGISTRATION_ENABLED=true
+    healthcheck:
+      test: [
+        "CMD-SHELL",
+        "curl -s http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"
+      ]
+      interval: 5s
+      timeout: 5s
     depends_on:
       mongodb:
         condition: service_healthy
+
   frontend:
     #image: ghcr.io/noahrau/todoapp-frontend:latest
     build:
