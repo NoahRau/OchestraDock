@@ -33,9 +33,9 @@ function Login() {
         username,
         password,
       });
-
-      const { accessToken, refreshToken } = res.data;
-      login(accessToken, refreshToken);
+      console.log(res);
+      const { token } = res.data;
+      login(token);
       navigate("/");
     } catch (err) {
       console.error("Login fehlgeschlagen:", err);

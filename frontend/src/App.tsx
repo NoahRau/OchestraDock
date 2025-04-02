@@ -1,15 +1,8 @@
-import { AppSidebar } from "./components/app-sidebar";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "./components/ui/sidebar";
 import { BrowserRouter, Route, Routes } from "react-router";
-import List from "./pages/List";
-import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProtectedRoute from "@/auth/ProtectedRoute";
+import ProtectedRoute from "@/auth/ProtectedRoute.tsx";
+import List from "./pages/List";
 
 function App() {
   return (
@@ -18,17 +11,9 @@ function App() {
         <Route
           path="/"
           element={
-            <Sidebar>
-              <Home />
-            </Sidebar>
-          }
-        />
-        <Route
-          path="/lists/:id"
-          element={
-            <Sidebar>
+            <Auth>
               <List />
-            </Sidebar>
+            </Auth>
           }
         />
         <Route path="/login" element={<Login />} />
@@ -39,18 +24,10 @@ function App() {
   );
 }
 
-function Sidebar({ children }: { children: React.ReactNode }) {
+function Auth({ children }: { children: React.ReactNode }) {
   return (
     <ProtectedRoute>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <main>
-            <SidebarTrigger />
-            {children}
-          </main>
-        </SidebarInset>
-      </SidebarProvider>
+      <main className="h-full w-full">{children}</main>
     </ProtectedRoute>
   );
 }

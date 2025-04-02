@@ -36,3 +36,6 @@ build/
 /frontend/package-lock.json
 
 .direnv/
+
+venv
+__pycache__

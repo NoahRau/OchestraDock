@@ -9,22 +9,15 @@ export function setAccessToken(token: string): void {
 }
 
 export function getRefreshToken(): string | null {
-  return localStorage.getItem("refreshToken");
-}
-
-export function setRefreshToken(token: string): void {
-  localStorage.setItem("refreshToken", token);
+  return null; // Kein Refresh-Token mehr nötig
 }
 
 export function clearTokens(): void {
   localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
 }
 
 export function refreshAccessToken(): Promise<
-  AxiosResponse<{ accessToken: string }>
+  AxiosResponse<{ token: string }>
 > {
-  return axios.post("/api/auth/refresh", {
-    refreshToken: getRefreshToken(),
-  });
+  return axios.post("/api/auth/refresh");
 }

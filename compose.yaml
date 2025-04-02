@@ -52,15 +52,32 @@ services:
         condition: service_healthy
 
   frontend:
-    image: ghcr.io/noahrau/todoapp-frontend:latest
-    #build:
-    #  context: ./frontend
+    #image: ghcr.io/noahrau/todoapp-frontend:latest
+    build:
+      context: ./frontend
     container_name: frontend
     ports:
       - "3000:80"
     depends_on:
       backend:
         condition: service_healthy
+  background_service:
+    build:
+      context: ./background_service
+    container_name: background_service
+    ports:
+      - "8000:8000"
+    environment:
+      - UNSPLASH_ACCESS_KEY=${unsplash_key}
+      - DATABASE_URL=sqlite:///./background.db
+    volumes:
+      - background-data:/app/background.db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:8000/image/today || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
 volumes:
   mongo-data:
+  background-data:

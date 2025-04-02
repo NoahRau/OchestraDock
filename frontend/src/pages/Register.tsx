@@ -45,8 +45,8 @@ function Register() {
         }
       );
 
-      const { accessToken, refreshToken } = res.data;
-      login(accessToken, refreshToken);
+      const { token } = res.data;
+      login(token);
       navigate("/login");
     } catch (err) {
       console.error("Registrierung fehlgeschlagen:", err);

@@ -1,11 +1,18 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  InternalAxiosRequestConfig,
+} from "axios";
 import {
   getAccessToken,
   setAccessToken,
   refreshAccessToken,
-  getRefreshToken,
 } from "../auth/tokenService";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 const api: AxiosInstance = axios.create({
   baseURL: "http://localhost:3080/api/v1",
@@ -36,7 +43,7 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest: any = error.config;
+    const originalRequest = error.config as CustomAxiosRequestConfig;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
@@ -56,10 +63,10 @@ api.interceptors.response.use(
 
       try {
         const response = await refreshAccessToken();
-        const newToken: string = response.data.accessToken;
+        const newToken: string = response.data.token;
         setAccessToken(newToken);
         api.defaults.headers.common["Authorization"] = "Bearer " + newToken;
-        useAuthStore.getState().login(newToken, getRefreshToken() ?? "");
+        useAuthStore.getState().login(newToken);
         processQueue(null, newToken);
         return api(originalRequest);
       } catch (err) {
