@@ -79,5 +79,5 @@ services:
       retries: 3
 
 volumes:
-  mongo-data:
-  background-data:
+  - mongo-data:
+  - background-data:/app/background.db
