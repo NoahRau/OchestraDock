@@ -3,7 +3,6 @@ import AddTodo from "@/components/lists/AddTodo";
 import { useEffect, useLayoutEffect, useState } from "react";
 import api from "@/api/api";
 import axios from "axios";
-import { Link } from "react-router";
 
 type List = {
   completed: boolean;
