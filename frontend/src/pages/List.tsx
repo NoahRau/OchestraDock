@@ -89,11 +89,11 @@ function List() {
           handleDelete={handleDelete}
         />
       </div>
-      <div className="relative">
+      <div className="relative h-svh">
         <img
           src={image?.url}
           alt={image?.description}
-          className="h-full object-cover"
+          className="h-full object-cover w-full"
         />
         <div className="bg-white absolute py-0.5 px-2 rounded-tl right-0 bottom-0">
           {image?.author}
