@@ -51,16 +51,16 @@ services:
       mongodb:
         condition: service_healthy
 
-  # frontend:
-  #   #image: ghcr.io/noahrau/todoapp-frontend:latest
-  #   build:
-  #     context: ./frontend
-  #   container_name: frontend
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     backend:
-  #       condition: service_healthy
+  frontend:
+    #image: ghcr.io/noahrau/todoapp-frontend:latest
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
   background_service:
     build:
       context: ./background_service
