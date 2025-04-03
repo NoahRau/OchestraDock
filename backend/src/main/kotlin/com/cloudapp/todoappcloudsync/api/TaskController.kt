@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @Tag(name = "Tasks", description = "Task management endpoints")
 @SecurityRequirement(name = "bearerAuth")
-@CrossOrigin(origins = ["http://localhost:3001"])
+@CrossOrigin(origins = ["http://localhost:3000"])
 @RestController
 @RequestMapping("/api/v1/tasks")
 @Validated

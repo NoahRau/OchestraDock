@@ -1,22 +1,26 @@
-import useTodoStore, { List, Todo } from "@/store/useTodoStore";
 import { Checkbox } from "../ui/checkbox";
 import clsx from "clsx";
 import { Button } from "../ui/button";
 import { Trash2 } from "lucide-react";
+import List from "@/pages/List";
 
-function ListElement({ data }: { data: List }) {
-  // const fetchTodos = useTodoStore((state) => state.fetchTodos);
-
-  // useEffect(() => {
-  //   fetchTodos(data.id);
-  // }, [data.id, fetchTodos]);
+function ListElement({
+  data,
+  handleDelete,
+  toggleTodo,
+}: {
+  data: List[];
+  handleDelete: (id: string) => void;
+  toggleTodo: (id: List["id"]) => void;
+}) {
   return (
     <div className="space-y-4">
-      {data.todos.map((todoData) => (
+      {data.map((todoData: List) => (
         <ListElementItem
           key={todoData.id}
+          handleDelete={handleDelete}
           todoData={todoData}
-          listid={data.id}
+          toggleTodo={toggleTodo}
         />
       ))}
     </div>
@@ -25,37 +29,42 @@ function ListElement({ data }: { data: List }) {
 
 function ListElementItem({
   todoData,
-  listid,
+  handleDelete,
+  toggleTodo,
 }: {
-  todoData: Todo;
-  listid: string;
+  todoData: List;
+  handleDelete: (id: string) => void;
+  toggleTodo: (id: List["id"]) => void;
 }) {
-  const toggleTodo = useTodoStore((state) => state.toggleTodo);
+  const deleteTodo = () => {
+    handleDelete(todoData.id);
+  };
 
   return (
     <div
-      className="flex items-center group cursor-pointer "
-      onClick={() => toggleTodo(listid, todoData.id)}
+      className="flex items-center group cursor-pointer"
+      onClick={() => toggleTodo(todoData.id)}
     >
       <div className="flex items-center">
         <Checkbox
           id={todoData.id}
-          checked={todoData.checked}
+          checked={todoData.completed}
           className="size-5"
         />
         <label
           htmlFor={todoData.id}
           className={clsx(
             "ml-2 pointer-events-none group-hover:font-semibold transition-all",
-            todoData.checked && "line-through"
+            todoData.completed && "line-through"
           )}
         >
-          {todoData.name}
+          {todoData.description}
         </label>
       </div>
       <Button
         variant={"ghost"}
-        className="ml-auto opacity-0 group-hover:opacity-100"
+        onClick={deleteTodo}
+        className="ml-auto opacity-0 group-hover:opacity-100 cursor-pointer"
       >
         <Trash2 />
       </Button>

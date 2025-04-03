@@ -8,7 +8,7 @@ UNSPLASH_ACCESS_KEY = os.getenv("UNSPLASH_ACCESS_KEY")
 def fetch_random_image():
     url = "https://api.unsplash.com/photos/random"
     headers = {"Authorization": f"Client-ID {UNSPLASH_ACCESS_KEY}"}
-    params = {"query": "nature", "orientation": "landscape"}
+    params = {"query": "nature", "orientation": "portrait"}
 
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()

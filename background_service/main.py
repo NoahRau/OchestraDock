@@ -4,12 +4,26 @@ from database import SessionLocal, engine, Base
 from models import BackgroundImage
 from scheduler import start_scheduler
 from datetime import date
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000"
+]
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 from scheduler import fetch_and_store_image
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
 
 def get_db():
     db = SessionLocal()
