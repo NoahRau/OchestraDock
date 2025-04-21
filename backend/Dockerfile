@@ -1,19 +1,46 @@
-FROM maven:3.9-eclipse-temurin-21 AS builder
+# Build-Stage mit Maven
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
 
-# Copy only pom.xml first and download dependencies
+# Kopiere nur pom.xml und lade Abhängigkeiten herunter (für Layer-Caching)
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
-# Now copy the source code and build the project
+# Kopiere den Quellcode und baue das Projekt
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests && \
+    # Extrahiere die Abhängigkeiten für eine optimierte JRE
+    jdeps --ignore-missing-deps \
+    --print-module-deps \
+    --multi-release 21 \
+    --class-path "/app/target/dependency/*" \
+    --module-path "/app/target/dependency/*" \
+    target/ToDoAppCloudsync-0.0.1-SNAPSHOT.jar > jre-deps.info
 
-FROM openjdk:21-jdk-slim
+# Runtime-Stage mit minimaler JRE
+FROM eclipse-temurin:21-jre-alpine
+
+# Erstelle nicht-Root-Benutzer
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Installiere nur notwendige Tools für Health-Checks
+RUN apk add --no-cache curl && \
+    rm -rf /var/cache/apk/*
+
+# Setze Arbeitsverzeichnis
 WORKDIR /app
-RUN apt-get update -y \
-    && apt-get install -y curl \
-    && rm -rf /var/lib/apt/lists/*
+
+# Kopiere nur die kompilierte JAR-Datei vom Builder
 COPY --from=builder /app/target/ToDoAppCloudsync-0.0.1-SNAPSHOT.jar app.jar
+
+# Wechsle zum nicht-Root-Benutzer
+USER appuser
+
+# Exponiere Port
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# Starte die Anwendung mit optimierten JVM-Einstellungen
+ENTRYPOINT ["java", \
+    "-XX:+UseContainerSupport", \
+    "-XX:MaxRAMPercentage=75.0", \
+    "-jar", "app.jar"]
