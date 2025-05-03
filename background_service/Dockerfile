@@ -11,16 +11,16 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Installiere Abhängigkeiten in einem speziellen Verzeichnis
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Finale, schlanke Stage
 FROM python:3.11-alpine
 
-# Kopiere Python-Pakete vom Builder
-COPY --from=builder /root/.local /root/.local
+# Erstelle nicht-Root-Benutzer
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# Stelle sicher, dass die Binaries im PATH sind
-ENV PATH=/root/.local/bin:$PATH
+# Kopiere Python-Pakete vom Builder
+COPY --from=builder /install /usr/local
 
 # Setze Arbeitsverzeichnis
 WORKDIR /app
@@ -28,16 +28,18 @@ WORKDIR /app
 # Kopiere den Anwendungscode
 COPY . .
 
+# Ändere die Besitzrechte der Dateien auf den nicht-Root-Benutzer
+RUN chown -R appuser:appgroup /usr/local /app
+
+# Wechsle zum nicht-Root-Benutzer
+USER appuser
+
 # Setze Umgebungsvariablen
 ENV UVICORN_HOST=0.0.0.0
 ENV UVICORN_PORT=8000
 
 # Exponiere Port
 EXPOSE 8000
-
-# Führe die Anwendung als nicht-Root-Benutzer aus
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
 
 # Starte die Anwendung
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

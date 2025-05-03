@@ -19,14 +19,12 @@ RUN npm run build
 # Finale, extrem schlanke nginx-Stage
 FROM nginx:alpine-slim
 
-# Kopiere nur die gebauten Dateien und eine angepasste nginx.conf
+# Kopiere nur die gebauten Dateien
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Optimiere nginx für Produktion
-RUN rm -rf /var/cache/apk/* && \
-    rm -rf /usr/share/nginx/html/index.html.gz && \
-    chown -R nginx:nginx /usr/share/nginx/html && \
-    chmod -R 755 /usr/share/nginx/html
+# Erstelle notwendige Verzeichnisse und setze die richtigen Berechtigungen
+RUN mkdir -p /var/cache/nginx /var/run /run && \
+    chown -R nginx:nginx /var/cache/nginx /var/run /run /usr/share/nginx/html
 
 # Führe nginx als nicht-Root-Benutzer aus
 USER nginx
