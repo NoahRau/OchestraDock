@@ -26,7 +26,7 @@ function Register() {
 
   useEffect(() => {
     if (accessToken) {
-      navigate("/dashboard", { replace: true });
+      navigate("/", { replace: true });
     }
   }, [accessToken, navigate]);
 
