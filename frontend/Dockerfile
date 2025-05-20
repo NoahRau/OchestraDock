@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Installiere Abhängigkeiten mit Production-Flag, ohne npm-Cache
-RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
+RUN npm ci --no-audit --no-fund && npm cache clean --force
 
 # Kopiere den Quellcode
 COPY . .
