@@ -1,0 +1,12 @@
+auth:
+  existingSecret: app-secrets
+  username: ""
+  password: ""
+  rootUser: ""
+  rootPassword: ""
+  database: ""  # Optional
+
+persistence:
+  enabled: true
+  size: 8Gi
+  storageClass: standard
