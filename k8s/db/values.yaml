@@ -1,10 +1,7 @@
 auth:
-  existingSecret: app-secrets
-  username: ""
-  password: ""
-  rootUser: ""
-  rootPassword: ""
-  database: ""  # Optional
+  rootUser: admin
+  rootPassword: "securepass"
+  database: todoapp
 
 persistence:
   enabled: true
