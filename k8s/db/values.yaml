@@ -1,7 +1,15 @@
 auth:
-  rootUser: admin
-  rootPassword: "securepass"
-  database: todoapp
+  enabled: true
+  rootUser: root
+  rootPassword: a-different-very-strong-password
+  usernames:
+    - todoapp-user
+  passwords:
+    - securepass
+  databases:
+    - todoapp
+
+architecture: standalone
 
 persistence:
   enabled: true

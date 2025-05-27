@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: ghcr.io/noahrau/todoapp-backend:latest
+          image: ghcr.io/noahrau/todoapp-frontend:latest
           ports:
             - containerPort: 80

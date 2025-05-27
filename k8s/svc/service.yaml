@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: background-service
 spec:
+  type: NodePort
   selector:
     app: background-service
   ports:
-    - protocol: TCP
-      port: 8000
+    - port: 8000
       targetPort: 8000
-  type: ClusterIP
+      nodePort: 30082

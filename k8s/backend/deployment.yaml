@@ -25,17 +25,17 @@ spec:
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mongodb
-                  key: mongodb-root-user
+                  name: mongodb-app-creds
+                  key: mongodb-username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb
-                  key: mongodb-root-password
+                  name: mongodb-app-creds
+                  key: mongodb-password
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: mongodb
+                  name: mongodb-app-creds
                   key: mongodb-database
             - name: JWT_SECRET
               valueFrom:
@@ -44,9 +44,3 @@ spec:
                   key: jwt_secret
             - name: REGISTRATION_ENABLED
               value: "true"
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5

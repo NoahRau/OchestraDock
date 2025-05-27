@@ -4,7 +4,6 @@ First ensure Minikube and helm is installed.
 
 ```shell
 minikube start
-minikube dashboard
 ```
 
 deploy the secrets:
@@ -29,3 +28,14 @@ kubectl apply -f backend/
 kubectl apply -f frontend/
 kubectl apply -f svc/
 ```
+
+get your cluster ip:
+
+```shell
+minikube ip
+```
+
+Now you can access the sites on
+
+- **Backend**: <minikube-ip>:30081/swagger-ui/index.html
+- **Frontend**: <minikube-ip>:30080/login
