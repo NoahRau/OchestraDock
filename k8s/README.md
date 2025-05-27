@@ -1,4 +1,10 @@
 
+deploy the secrets:
+
+```shell
+kubectl apply -f secrets.yaml
+```
+
 
 add the helm chart and install it:
 
