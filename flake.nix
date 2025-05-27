@@ -12,13 +12,18 @@
     pkgs = import nixpkgs {inherit system;};
   in {
     devShells.${system}.default = pkgs.mkShell {
-      buildInputs = [
-        pkgs.jdk21
-        pkgs.kotlin
-        pkgs.maven
-        pkgs.nodejs_23
-        pkgs.jq
-        pkgs.ktlint
+      buildInputs = with pkgs; [
+        jdk21
+        kotlin
+        maven
+        nodejs_23
+        jq
+        ktlint
+
+        minikube
+        helm
+        kubectl
+        k9s
       ];
     };
   };
