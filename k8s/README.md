@@ -1,3 +1,11 @@
+# Kubernetes
+
+First ensure Minikube and helm is installed.
+
+```shell
+minikube start
+minikube dashboard
+```
 
 deploy the secrets:
 

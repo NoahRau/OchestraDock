@@ -21,7 +21,7 @@
         ktlint
 
         minikube
-        helm
+        kubernetes-helm
         kubectl
         k9s
       ];
