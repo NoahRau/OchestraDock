@@ -43,6 +43,8 @@ class SecurityConfig(
                             "/api/v1/auth/register",
                             "/api/v1/docs/**",
                             "/actuator/health",
+                            "/actuator/prometheus",
+                            "/actuator/prometheus/**",
                         ).permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest()
