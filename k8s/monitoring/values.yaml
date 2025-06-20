@@ -1,0 +1,17 @@
+# monitoring/values.yaml
+grafana:
+  persistence:
+    enabled: true
+    storageClassName: standard
+    size: 5Gi
+  adminPassword: "prom-operator"
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: standard
+          resources:
+            requests:
+              storage: 20Gi
