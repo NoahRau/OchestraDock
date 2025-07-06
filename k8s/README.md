@@ -5,46 +5,96 @@ This project uses Helm charts for deploying MongoDB, Grafana, Loki, and Promethe
 ### Prerequisites
 
 *   **Helm:** Ensure Helm is installed on your system. Refer to the official Helm documentation for installation instructions: [https://helm.sh/docs/intro/install/](https://helm.sh/docs/intro/install/)
+*   **Minikube:** Ensure Minikube is installed and configured.
 
-### Adding Helm Repositories
+### Setting up the entire application stack on Minikube
 
-Before installing the charts, add the necessary Helm repositories:
+To deploy the entire application stack (MongoDB, Grafana, Loki, Prometheus, Backend, Frontend, and Background Service) on Minikube, follow these steps:
 
-```bash
-helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo add grafana https://grafana.github.io/helm-charts
-helm repo update
-```
+1.  **Start Minikube:**
+    ```bash
+    minikube start
+    ```
 
-### Installing Helm Charts
+2.  **Add Helm Repositories:**
+    Before installing the charts, add the necessary Helm repositories:
+    ```bash
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm repo add grafana https://grafana.github.io/helm-charts
+    helm repo update
+    ```
 
-Each service has its own `values.yaml` file in its respective directory under `k8s/`. These files contain common configurations like storage and default passwords. **Remember to review and update sensitive values like passwords before deployment.**
+3.  **Apply Application Secrets:**
+    Apply the secrets required for the application components.
+    ```bash
+    kubectl apply -f k8s/app-secrets.yaml
+    ```
 
-Once the repositories are added, you can install the charts using their respective `values.yaml` files:
+4.  **Install Helm Charts:**
+    Each service has its own `values.yaml` file in its respective directory under `k8s/`. These files contain common configurations like storage and default passwords. **Remember to review and update sensitive values like passwords before deployment.**
 
-#### MongoDB
+    *   **MongoDB:**
+        ```bash
+        helm install mongodb bitnami/mongodb -f k8s/mongodb/values.yaml --namespace default
+        ```
 
-```bash
-helm install mongodb bitnami/mongodb -f k8s/mongodb/values.yaml --namespace default
-```
+    *   **Grafana:**
+        ```bash
+        helm install grafana grafana/grafana -f k8s/grafana/values.yaml --namespace default
+        ```
 
-#### Grafana
+    *   **Loki:**
+        ```bash
+        helm install loki grafana/loki -f k8s/loki/values.yaml --namespace default
+        ```
 
-```bash
-helm install grafana grafana/grafana -f k8s/grafana/values.yaml --namespace default
-```
+    *   **Prometheus:**
+        ```bash
+        helm install prometheus grafana/prometheus -f k8s/prometheus/values.yaml --namespace default
+        ```
 
-#### Loki
+5.  **Deploy Application Services:**
+    Deploy the backend, frontend, and background services using their respective Kubernetes manifests.
 
-```bash
-helm install loki grafana/loki -f k8s/loki/values.yaml --namespace default
-```
+    *   **Backend Service:**
+        ```bash
+        kubectl apply -f k8s/backend/backend-deployment.yaml
+        kubectl apply -f k8s/backend/backend-service.yaml
+        ```
 
-#### Prometheus
+    *   **Frontend Service:**
+        ```bash
+        kubectl apply -f k8s/frontend/frontend-deployment.yaml
+        kubectl apply -f k8s/frontend/frontend-service.yaml
+        ```
 
-```bash
-helm install prometheus grafana/prometheus -f k8s/prometheus/values.yaml --namespace default
-```
+    *   **Background Service:**
+        ```bash
+        kubectl apply -f k8s/background-service/background-service-deployment.yaml
+        kubectl apply -f k8s/background-service/background-service-service.yaml
+        ```
+
+### Accessing the Services
+
+Once all services are deployed, you can access them using `minikube service` commands:
+
+*   **Frontend:**
+    ```bash
+    minikube service frontend
+    ```
+    This will open the frontend in your browser.
+
+*   **Backend API Docs (Swagger UI):**
+    ```bash
+    minikube service backend --url
+    ```
+    Append `/swagger.html` to the URL to access the API documentation (e.g., `http://<backend-ip>:<port>/swagger.html`).
+
+*   **Grafana:**
+    ```bash
+    minikube service grafana --url
+    ```
+    Use the `admin` username and the password configured in `k8s/grafana/values.yaml` (default is `your-secure-grafana-password`).
 
 ### Custom Metrics (Backend)
 
