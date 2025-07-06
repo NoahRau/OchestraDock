@@ -15,7 +15,19 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3080/api/v1",
+  baseURL: window._env_?.VITE_BACKEND_URL || "http://localhost:3080/api/v1",
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+declare global {
+  interface Window {
+    _env_: {
+      VITE_BACKEND_URL: string;
+    };
+  }
+}
 });
 
 let isRefreshing = false;

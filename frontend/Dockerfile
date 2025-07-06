@@ -8,8 +8,6 @@ WORKDIR /app
 COPY package*.json ./
 
 # Installiere Abhängigkeiten mit Production-Flag, ohne npm-Cache
-ARG VITE_BACKEND_URL
-ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 RUN npm ci --no-audit --no-fund && npm cache clean --force
 
 # Kopiere den Quellcode
@@ -21,8 +19,18 @@ RUN npm run build
 # Finale, extrem schlanke nginx-Stage
 FROM nginx:alpine-slim
 
+# Installiere envsubst
+RUN apk add --no-cache gettext
+
 # Kopiere nur die gebauten Dateien
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# Kopiere die Nginx-Konfigurationsvorlage und das Entrypoint-Skript
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+# Setze Berechtigungen für das Entrypoint-Skript
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Erstelle notwendige Verzeichnisse und setze die richtigen Berechtigungen
 RUN mkdir -p /var/cache/nginx /var/run /run && \
@@ -34,5 +42,5 @@ USER nginx
 # Exponiere Port
 EXPOSE 80
 
-# Starte nginx im Vordergrund
-CMD ["nginx", "-g", "daemon off;"]
+# Starte nginx über das Entrypoint-Skript
+ENTRYPOINT ["docker-entrypoint.sh"]
