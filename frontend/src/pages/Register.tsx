@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuthStore } from "@/store/useAuthStore.ts";
-import axios from "axios";
+import api from "@/api/api";
 import ErrorAlert from "@/components/ErrorAlert";
 
 function Register() {
@@ -37,13 +37,10 @@ function Register() {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:3080/api/v1/auth/register",
-        {
-          username,
-          password,
-        }
-      );
+      const res = await api.post("/auth/register", {
+        username,
+        password,
+      });
 
       const { token } = res.data;
       login(token);
