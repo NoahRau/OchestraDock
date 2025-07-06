@@ -15,7 +15,7 @@ interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 const api: AxiosInstance = axios.create({
-  baseURL: "http://localhost:3080/api/v1",
+  baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3080/api/v1",
 });
 
 let isRefreshing = false;

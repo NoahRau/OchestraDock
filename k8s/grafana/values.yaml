@@ -1,4 +1,4 @@
-adminPassword: your-secure-grafana-password
+adminPassword: test
 persistence:
   enabled: true
   size: 10Gi
@@ -44,7 +44,7 @@ dashboardProviders:
         disableDelete: false
         editable: true
         options:
-          path: /var/lib/grafana/dashboards/default # Corrected path
+          path: /var/lib/grafana/dashboards/default
 
 initChownData:
   enabled: false 

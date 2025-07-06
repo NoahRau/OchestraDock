@@ -8,6 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Installiere Abhängigkeiten mit Production-Flag, ohne npm-Cache
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 RUN npm ci --no-audit --no-fund && npm cache clean --force
 
 # Kopiere den Quellcode
