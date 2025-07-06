@@ -33,6 +33,6 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner | lower }}/todoapp-backend:latest
+          tags: ghcr.io/noahrau/todoapp-backend:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max,sharing=private
