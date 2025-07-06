@@ -1,4 +1,3 @@
-
 name: Build & Push Frontend Background Service
 
 on:
@@ -6,12 +5,16 @@ on:
     branches:
       - main
     paths:
-      - 'background_service/**'
+      - "background_service/**"
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
