@@ -33,9 +33,25 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/v1/tasks")
 @Validated
+import io.micrometer.core.instrument.Counter
+import io.micrometer.core.instrument.Gauge
+import io.micrometer.core.instrument.MeterRegistry
+
 class TaskController(
     private val taskService: TaskService,
+    private val meterRegistry: MeterRegistry,
 ) {
+    private val taskCountGauge = Gauge.builder("tasks.total", taskService) { it.getAllTasks().size.toDouble() }
+        .description("Total number of tasks")
+        .register(meterRegistry)
+
+    private val tasksCreatedCounter = Counter.builder("tasks.created.total")
+        .description("Total number of tasks created")
+        .register(meterRegistry)
+
+    private val tasksDeletedCounter = Counter.builder("tasks.deleted.total")
+        .description("Total number of tasks deleted")
+        .register(meterRegistry)
     companion object {
         private val logger = LoggerFactory.getLogger(TaskController::class.java)
     }
@@ -92,6 +108,7 @@ class TaskController(
 
         logger.info("Creating task for user: {} with description: {}", userId, taskRequest.description)
         val response = taskService.createTask(taskRequest, userId = userId)
+        tasksCreatedCounter.increment()
         logger.info("Task created with id: {}", response.id)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
@@ -136,6 +153,7 @@ class TaskController(
     ): ResponseEntity<Void> {
         logger.info("Deleting task with id: {}", id)
         taskService.deleteTask(id)
+        tasksDeletedCounter.increment()
         logger.info("Task deleted with id: {}", id)
         return ResponseEntity.noContent().build()
     }
