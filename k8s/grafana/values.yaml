@@ -24,6 +24,9 @@ datasources:
         isDefault: false
         version: 1
         editable: true
+        jsonData:
+          httpHeaders:
+            X-Scope-OrgID: default
 
 grafana:
   sidecar:
@@ -47,4 +50,4 @@ dashboardProviders:
           path: /var/lib/grafana/dashboards/default
 
 initChownData:
-  enabled: false 
+  enabled: false
