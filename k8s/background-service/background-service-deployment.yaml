@@ -1,7 +1,11 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: background-service
+  namespace: default
+  labels:
+    app: background-service
 spec:
   replicas: 1
   selector:
@@ -14,7 +18,7 @@ spec:
     spec:
       containers:
         - name: background-service
-          image: your-background-service-image:latest
+          image: ghcr.io/noahrau/todoapp-background-service:latest
           ports:
             - containerPort: 8000
           env:

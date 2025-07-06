@@ -1,7 +1,11 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: default
+  labels:
+    app: frontend
 spec:
   replicas: 1
   selector:

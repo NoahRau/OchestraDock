@@ -1,7 +1,11 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: default
+  labels:
+    app: backend
 spec:
   replicas: 1
   selector:
@@ -11,6 +15,7 @@ spec:
     metadata:
       labels:
         app: backend
+        loki.grafana.com/scrape: "true"
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "8080"
@@ -22,6 +27,8 @@ spec:
           ports:
             - containerPort: 8080
           env:
+            - name: LOKI_URL
+              value: http://loki.monitoring.svc.cluster.local:3100
             - name: DB_HOST
               value: mongodb
             - name: DB_PORT
