@@ -16,7 +16,7 @@
         jdk21
         kotlin
         maven
-        nodejs_23
+        nodejs
         jq
         ktlint
 
