@@ -26,6 +26,13 @@ const api: AxiosInstance = axios.create({
   baseURL: window._env_?.VITE_BACKEND_URL || "http://localhost:3080/api/v1",
 });
 
+// Check backend connectivity on startup
+api.get("/").then(() => {
+  console.log("Backend connected successfully!");
+}).catch((error) => {
+  console.error("Failed to connect to backend:", error);
+});
+
 let isRefreshing = false;
 let failedQueue: {
   resolve: (token: string) => void;
