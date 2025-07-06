@@ -10,17 +10,6 @@ import {
 } from "../auth/tokenService";
 import { useAuthStore } from "@/store/useAuthStore";
 
-interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  _retry?: boolean;
-}
-
-const api: AxiosInstance = axios.create({
-  baseURL: window._env_?.VITE_BACKEND_URL || "http://localhost:3080/api/v1",
-
-interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
-  _retry?: boolean;
-}
-
 declare global {
   interface Window {
     _env_: {
@@ -28,6 +17,13 @@ declare global {
     };
   }
 }
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
+
+const api: AxiosInstance = axios.create({
+  baseURL: window._env_?.VITE_BACKEND_URL || "http://localhost:3080/api/v1",
 });
 
 let isRefreshing = false;
