@@ -26,7 +26,8 @@ datasources:
         editable: true
         jsonData:
           httpHeaders:
-            X-Scope-OrgID: default
+            - name: "X-Scope-OrgID"
+              value: "default"
 
 grafana:
   sidecar:
@@ -50,4 +51,4 @@ dashboardProviders:
           path: /var/lib/grafana/dashboards/default
 
 initChownData:
-  enabled: false
+  enabled: false 
