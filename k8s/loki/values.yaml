@@ -18,6 +18,8 @@ loki:
   querier:
     # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
     max_concurrent: 2
+  limits_config:
+    volume_enabled: true
 
 #gateway:
 #  ingress:

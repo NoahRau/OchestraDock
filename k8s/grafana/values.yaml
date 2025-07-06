@@ -2,3 +2,49 @@ adminPassword: your-secure-grafana-password
 persistence:
   enabled: true
   size: 10Gi
+
+service:
+  type: NodePort
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.default.svc.cluster.local
+        access: proxy
+        isDefault: true
+        version: 1
+        editable: true
+      - name: Loki
+        type: loki
+        url: http://loki.default.svc.cluster.local:3100
+        access: proxy
+        isDefault: false
+        version: 1
+        editable: true
+
+grafana:
+  sidecar:
+    dashboards:
+      enabled: true
+
+dashboardsConfigMaps:
+  default: "backend-dashboard" # Reference the backend-dashboard ConfigMap
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDelete: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default # Corrected path
+
+initChownData:
+  enabled: false 

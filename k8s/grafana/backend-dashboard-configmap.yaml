@@ -251,7 +251,7 @@ data:
         },
         {
           "datasource": {
-            ""type": "prometheus",
+            "type": "prometheus",
             "uid": "prometheus"
           },
           "gridPos": {
