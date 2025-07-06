@@ -36,11 +36,12 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 RUN mkdir -p /var/cache/nginx /var/run /run && \
     chown -R nginx:nginx /var/cache/nginx /var/run /run /usr/share/nginx/html
 
-# Führe nginx als nicht-Root-Benutzer aus
-USER nginx
+# Switch to root to allow writing to /etc/nginx
+USER root
 
 # Exponiere Port
 EXPOSE 80
 
 # Starte nginx über das Entrypoint-Skript
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]
