@@ -1,0 +1,7 @@
+loki:
+  storage:
+    retention_period: 720h # 30 days
+
+persistence:
+  enabled: true
+  size: 20Gi

@@ -1,0 +1,4 @@
+auth:
+  enabled: false
+persistence:
+  size: 8Gi
