@@ -13,7 +13,7 @@ class CorsConfig {
             override fun addCorsMappings(registry: CorsRegistry) {
                 registry
                     .addMapping("/**")
-                    .allowedOrigins("*")
+                    .allowedOrigins("http://192.168.49.2:30080")
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
                     .allowCredentials(false)
