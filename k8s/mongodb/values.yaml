@@ -1,0 +1,6 @@
+auth:
+  enabled: true
+  rootUser: mongouser
+  rootPassword: mongopassword
+persistence:
+  size: 8Gi

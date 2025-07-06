@@ -1,0 +1,37 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: background-service
+  namespace: default
+  labels:
+    app: background-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: background-service
+  template:
+    metadata:
+      labels:
+        app: background-service
+    spec:
+      containers:
+        - name: background-service
+          image: ghcr.io/noahrau/todoapp-background-service:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: UNSPLASH_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: unsplash_key
+            - name: DATABASE_URL
+              value: sqlite:///./background.db
+          readinessProbe:
+            httpGet:
+              path: /image/today
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 30

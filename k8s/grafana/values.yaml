@@ -1,0 +1,4 @@
+adminPassword: your-secure-grafana-password
+persistence:
+  enabled: true
+  size: 10Gi

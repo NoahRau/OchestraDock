@@ -1,0 +1,57 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: default
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        loki.grafana.com/scrape: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/noahrau/todoapp-backend:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: LOKI_URL
+              value: http://loki.monitoring.svc.cluster.local:3100
+            - name: DB_HOST
+              value: mongodb
+            - name: DB_PORT
+              value: "27017"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-app-creds
+                  key: mongodb-username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-app-creds
+                  key: mongodb-password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-app-creds
+                  key: mongodb-database
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: jwt_secret
+            - name: REGISTRATION_ENABLED
+              value: "true"
