@@ -18,6 +18,7 @@ spec:
       containers:
         - name: frontend
           image: ghcr.io/noahrau/todoapp-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:

@@ -24,6 +24,7 @@ spec:
       containers:
         - name: backend
           image: ghcr.io/noahrau/todoapp-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
