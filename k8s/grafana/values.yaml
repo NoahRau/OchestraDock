@@ -10,14 +10,14 @@ datasources:
   datasources.yaml:
     apiVersion: 1
     datasources:
-      - name: Prometheus
+      - name: prometheus
         type: prometheus
         url: http://prometheus-server.default.svc.cluster.local
         access: proxy
         isDefault: true
         version: 1
         editable: true
-      - name: Loki
+      - name: loki
         type: loki
         url: http://loki.default.svc.cluster.local:3100
         access: proxy
