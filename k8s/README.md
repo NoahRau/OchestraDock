@@ -21,6 +21,7 @@ To deploy the entire application stack (MongoDB, Grafana, Loki, Prometheus, Back
     ```bash
     helm repo add bitnami https://charts.bitnami.com/bitnami
     helm repo add grafana https://grafana.github.io/helm-charts
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
     helm repo update
     ```
 
@@ -50,7 +51,7 @@ To deploy the entire application stack (MongoDB, Grafana, Loki, Prometheus, Back
 
     *   **Prometheus:**
         ```bash
-        helm install prometheus grafana/prometheus -f k8s/prometheus/values.yaml --namespace default
+        helm install prometheus prometheus-community/prometheus -f k8s/prometheus/values.yaml --namespace default
         ```
 
 5.  **Deploy Application Services:**
